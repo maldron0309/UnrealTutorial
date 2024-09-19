@@ -23,6 +23,6 @@ void AMovingObstcle::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	FVector currentLocation = GetActorLocation(); // 현재 위치 저장
-	currentLocation.Z = currentLocation.Z + 1; // currentLocation의 Z값을 1씩 증가
-	SetActorLocation(currentLocation); 
+	currentLocation += obstacleVelocity * DeltaTime;
+	SetActorLocation(currentLocation);
 }

@@ -24,6 +24,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	UPROPERTY(EditAnywhere)
-	float moveSpeed = 0.f;
+	UPROPERTY(EditAnywhere, Category = "Moving")
+	FVector obstacleVelocity = FVector::ZeroVector;  
 };
