@@ -14,6 +14,8 @@ AMovingObstcle::AMovingObstcle()
 void AMovingObstcle::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	StartLocation = GetActorLocation();
 	// UE_LOG(LogTemp, Warning, TEXT("X : %f -- Y : %f -- Z : %f"), currentLocation.X, currentLocation.Y, currentLocation.Z);
 }
 
@@ -21,8 +23,27 @@ void AMovingObstcle::BeginPlay()
 void AMovingObstcle::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	MoveObstacle(DeltaTime);
+}
 
-	FVector currentLocation = GetActorLocation(); // 현재 위치 저장
-	currentLocation += obstacleVelocity * DeltaTime;
-	SetActorLocation(currentLocation);
+void AMovingObstcle::MoveObstacle(float DeltaTime)
+{
+	if (ShouldObstacleMove())
+	{
+		FVector MoveDirection = ObstacleVelocity.GetSafeNormal(); // GetSafeNormal() 함수를 이용하여 안전한 방향 벡터를 구하고 이를 변수에 할당함.
+		StartLocation = StartLocation + MoveDirection * DeltaTime;
+		SetActorLocation(StartLocation);
+		ObstacleVelocity = -ObstacleVelocity; // Velocity 값을 음수로 만들면 해당 방향은 기존과 반대가 됨
+	}
+	else
+	{
+		FVector CurrentLocation = GetActorLocation();
+		CurrentLocation = CurrentLocation + (ObstacleVelocity * DeltaTime);
+		SetActorLocation(CurrentLocation);
+	}
+}
+
+bool AMovingObstcle::ShouldObstacleMove() const
+{
+	return FVector::Dist(StartLocation,GetActorLocation()) > MaxDistance;
 }

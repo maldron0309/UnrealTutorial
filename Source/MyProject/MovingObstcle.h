@@ -25,5 +25,13 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Moving")
-	FVector obstacleVelocity = FVector::ZeroVector;  
+	FVector ObstacleVelocity = FVector::ZeroVector;
+
+	UPROPERTY(EditAnywhere, Category = "Moving")
+	float MaxDistance = 100.0f;
+
+	FVector StartLocation = FVector();
+
+	void MoveObstacle(float DeltaTime);
+	bool ShouldObstacleMove() const;
 };
