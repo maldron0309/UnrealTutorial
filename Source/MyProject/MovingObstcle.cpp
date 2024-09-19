@@ -47,3 +47,8 @@ bool AMovingObstcle::ShouldObstacleMove() const
 {
 	return FVector::Dist(StartLocation,GetActorLocation()) > MaxDistance;
 }
+
+void AMovingObstcle::RotateObstacle(float DeltaTime)
+{
+	AddActorLocalRotation(AngularVelocity * DeltaTime);
+}

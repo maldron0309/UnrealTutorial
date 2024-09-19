@@ -27,11 +27,15 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Moving")
 	FVector ObstacleVelocity = FVector::ZeroVector;
 
-	UPROPERTY(EditAnywhere, Category = "Moving")
+	UPROPERTY(EditAnywhere, Category = "Distance")
 	float MaxDistance = 100.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Rotation")
+	FRotator AngularVelocity = FRotator();
+	
 	FVector StartLocation = FVector();
 
 	void MoveObstacle(float DeltaTime);
 	bool ShouldObstacleMove() const;
+	void RotateObstacle(float DeltaTime);
 };
