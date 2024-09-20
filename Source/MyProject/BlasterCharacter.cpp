@@ -49,14 +49,45 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	if (EnhancedInputComponent)
 	{
 		EnhancedInputComponent -> BindAction(MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
+		EnhancedInputComponent -> BindAction(LookAction, ETriggerEvent::Triggered, this, &ThisClass::Look);
 	}
 }
 
 void ABlasterCharacter::Move(const FInputActionValue& Value)
 {
-	const bool CurrentValue = Value.Get<bool>();
-	if (CurrentValue)
+	// TODO
+	// 1. 컨트롤러의 nullptr 여부 검사
+	// 2. Input 가져오기 (FVector2D Type)
+	// 3. 컨트롤러의 회전값 가져오기
+	// 4. 캐릭터의 YawRotation 가져오기 (캐릭터의 회전은 수평으로만 이루어짐)
+	// 5. 회전행렬 이용하여 캐릭터가 바라보는 방향의 Forward 벡터 가져오기
+	// 6. 회전행렬 이용하여 캐릭터의 오른쪽 방향 벡터 가져오기
+	// 7. 전진벡터 Y값, 회전벡터 X값을 CharacterMovement에 적용
+
+	if (!Controller) // 1
 	{
-		UE_LOG(LogTemp, Warning, TEXT("IA_Move is working"));
+		return;
+	}
+
+	const FVector2D MovementVector = Value.Get<FVector2D>(); // 2
+
+	const FRotator Rotation = Controller->GetControlRotation(); // 3
+	const FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f); // 4
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X); // 5
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X); // 6
+	AddMovementInput(ForwardDirection, MovementVector.Y); // 7
+	AddMovementInput(RightDirection, MovementVector.X);
+
+}
+
+
+void ABlasterCharacter::Look(const FInputActionValue& Value)
+{
+	const FVector2D LookAxisValue = Value.Get<FVector2D>();
+
+	if (GetController())
+	{
+		AddControllerYawInput(LookAxisValue.X);
+		AddControllerPitchInput(LookAxisValue.Y);
 	}
 }
